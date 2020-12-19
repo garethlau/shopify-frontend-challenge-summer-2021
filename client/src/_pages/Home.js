@@ -3,6 +3,7 @@ import useCreateBallot from "../_mutations/useCreateBallot";
 import Button from "../_components/Button";
 import { useHistory } from "react-router-dom";
 import { useSnackbar } from "notistack";
+import { motion } from "framer-motion";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -11,14 +12,17 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.colors.darkShade,
   },
   content: {
-    width: "400px",
-    height: "300px",
+    width: "640px",
+    height: "400px",
     position: "absolute",
     top: "50%",
     left: "50%",
     transform: "translate(-50%, -50%)",
     color: "white",
     textAlign: "center",
+  },
+  introText: {
+    fontSize: "4rem",
   },
 }));
 
@@ -43,10 +47,22 @@ export default function Home() {
   return (
     <div className={classes.root}>
       <div className={classes.content}>
-        <h1>Welcome to the Shoppies</h1>
-        <Button color="primary" variant="contained" onClick={onClick}>
-          Get Started
-        </Button>
+        <motion.div
+          initial={{ opacity: 0, y: 100, scale: 0.5 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ delay: 0 }}
+        >
+          <h1 className={classes.introText}>Welcome to the Shoppies</h1>
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 100, scale: 0.5 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ delay: 0.5 }}
+        >
+          <Button color="primary" variant="contained" onClick={onClick}>
+            Get Started
+          </Button>
+        </motion.div>
       </div>
     </div>
   );
