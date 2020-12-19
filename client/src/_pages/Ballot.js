@@ -9,6 +9,7 @@ import useDebounce from "../_hooks/useDebounce";
 import Button from "../_components/Button";
 import useNominateMovie from "../_mutations/useNominateMovie";
 import MovieCard from "../_components/MovieCard";
+import { AnimatePresence } from "framer-motion";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -139,34 +140,36 @@ export default function Nominate() {
         />
         <div>
           {debouncedSearch && movies?.length === 0 && <p>No results.</p>}
-          {movies?.map((movie, index) => {
-            return (
-              <MovieCard
-                key={index}
-                title={movie.Title}
-                year={movie.Year}
-                poster={movie.Poster}
-                action={
-                  <Button
-                    disabled={nominated
-                      .map((x) => x.imdbID)
-                      .includes(movie.imdbID)}
-                    variant="contained"
-                    color="primary"
-                    onClick={async () => {
-                      await nominateMovie({
-                        imdbID: movie.imdbID,
-                        action: "nominate",
-                      });
-                      refetchBallot();
-                    }}
-                  >
-                    Nominate
-                  </Button>
-                }
-              />
-            );
-          })}
+          <AnimatePresence>
+            {movies?.map((movie, index) => {
+              return (
+                <MovieCard
+                  key={index}
+                  title={movie.Title}
+                  year={movie.Year}
+                  poster={movie.Poster}
+                  action={
+                    <Button
+                      disabled={nominated
+                        .map((x) => x.imdbID)
+                        .includes(movie.imdbID)}
+                      variant="contained"
+                      color="primary"
+                      onClick={async () => {
+                        await nominateMovie({
+                          imdbID: movie.imdbID,
+                          action: "nominate",
+                        });
+                        refetchBallot();
+                      }}
+                    >
+                      Nominate
+                    </Button>
+                  }
+                />
+              );
+            })}
+          </AnimatePresence>
         </div>
       </div>
     </div>
