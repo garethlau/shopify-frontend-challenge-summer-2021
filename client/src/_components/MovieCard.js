@@ -40,7 +40,11 @@ export default function MovieCard({ poster, title, year, action }) {
       animate={inView ? "visible" : "hidden"}
     >
       <div style={{ padding: "10px" }}>
-        <img style={{ width: "100%", borderRadius: "5px" }} src={poster} />
+        <img
+          style={{ width: "100%", borderRadius: "5px" }}
+          src={poster}
+          alt=""
+        />
       </div>
       <div
         style={{
