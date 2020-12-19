@@ -12,7 +12,11 @@ import MovieCard from "../_components/MovieCard";
 import { AnimatePresence } from "framer-motion";
 import { useSnackbar } from "notistack";
 import { motion } from "framer-motion";
+import QRCode from "../_components/QRCode";
+import LinkIcon from "@material-ui/icons/Link";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
+const ORIGIN = process.env.REACT_APP_ORIGIN || "localhost:3000";
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100vw",
@@ -29,6 +33,13 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     textAlign: "center",
     color: "white",
+  },
+  link: {
+    "&:hover": {
+      cursor: "pointer",
+      borderBottom: "3px solid",
+      transition: "ease 0.3s",
+    },
   },
   ballot: {
     // backgroundColor: theme.colors.lightShade,
@@ -105,9 +116,22 @@ export default function Nominate() {
   return (
     <div className={classes.root}>
       <div className={classes.container}>
-        <div>
-          <h1>Ballot: {ballotId} </h1>
-        </div>
+        <h1>
+          <CopyToClipboard
+            text={`${ORIGIN}/ballot/${ballotId}`}
+            onCopy={() => {
+              enqueueSnackbar(`URL copied to clipboard.`, {
+                variant: "success",
+              });
+              setTimeout(closeSnackbar, 5000);
+            }}
+          >
+            <span className={classes.link}>
+              Ballot: {ballotId} <LinkIcon />
+            </span>
+          </CopyToClipboard>
+        </h1>
+        <QRCode />
 
         <div>
           {isLoading ? (
