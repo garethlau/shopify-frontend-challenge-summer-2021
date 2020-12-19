@@ -15,7 +15,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <SnackbarProvider
-        maxSnack={3}
+        maxSnack={1}
         anchorOrigin={{
           vertical: "top",
           horizontal: "center",
