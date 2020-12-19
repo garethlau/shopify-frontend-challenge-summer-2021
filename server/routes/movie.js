@@ -7,7 +7,7 @@ const querystring = require("querystring");
 router.get("/", async (req, res) => {
   const { title = "" } = req.query;
   if (!title || title === "") {
-    return res.status(401).send({ message: "" });
+    return res.status(422).send();
   }
   try {
     const params = querystring.stringify({
