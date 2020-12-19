@@ -10,6 +10,7 @@ import Button from "../_components/Button";
 import useNominateMovie from "../_mutations/useNominateMovie";
 import MovieCard from "../_components/MovieCard";
 import { AnimatePresence } from "framer-motion";
+import { useSnackbar } from "notistack";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -18,6 +19,9 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.colors.darkShade,
     paddingTop: "100px",
     paddingBottom: "200px",
+    "& h1": {
+      color: theme.palette.primary.main,
+    },
   },
   container: {
     maxWidth: "640px",
@@ -48,6 +52,11 @@ const useStyles = makeStyles((theme) => ({
     border: "none",
     outline: "none",
   },
+  completeBanner: {
+    backgroundColor: theme.palette.success.main,
+    padding: "10px",
+    borderRadius: "10px",
+  },
 }));
 
 export default function Nominate() {
@@ -61,6 +70,7 @@ export default function Nominate() {
   const { data: movies } = useMovies(debouncedSearch);
   const { mutateAsync: nominateMovie } = useNominateMovie(ballotId);
   const [nominated, setNominated] = useState([]);
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
   useEffect(() => {
     if (ballot?.nominations?.length === 0) {
@@ -98,35 +108,42 @@ export default function Nominate() {
           ) : (
             <div className={classes.ballot}>
               <h1>Nominations</h1>
-              {nominated.length === 0 ? (
-                <p>Your nominations will show up here.</p>
+              {nominated.length === 5 ? (
+                <div className={classes.completeBanner}>
+                  <p>Congratulations, you've nominated 5 movies!</p>
+                </div>
               ) : (
-                nominated.map((movie, index) => {
-                  return (
-                    <MovieCard
-                      key={index}
-                      title={movie.Title}
-                      poster={movie.Poster}
-                      year={movie.Year}
-                      action={
-                        <Button
-                          onClick={async () => {
-                            await nominateMovie({
-                              imdbID: movie.imdbID,
-                              action: "withdraw",
-                            });
-                            refetchBallot();
-                          }}
-                          variant="contained"
-                          color="secondary"
-                        >
-                          Remove
-                        </Button>
-                      }
-                    />
-                  );
-                })
+                <p>
+                  You've nominated {nominated.length} movie
+                  {nominated.length !== 1 && "s"}, {5 - nominated.length} more
+                  to go!
+                </p>
               )}
+              {nominated.map((movie, index) => {
+                return (
+                  <MovieCard
+                    key={index}
+                    title={movie.Title}
+                    poster={movie.Poster}
+                    year={movie.Year}
+                    action={
+                      <Button
+                        onClick={async () => {
+                          await nominateMovie({
+                            imdbID: movie.imdbID,
+                            action: "withdraw",
+                          });
+                          refetchBallot();
+                        }}
+                        variant="contained"
+                        color="secondary"
+                      >
+                        Remove
+                      </Button>
+                    }
+                  />
+                );
+              })}
             </div>
           )}
         </div>
@@ -156,11 +173,18 @@ export default function Nominate() {
                       variant="contained"
                       color="primary"
                       onClick={async () => {
-                        await nominateMovie({
-                          imdbID: movie.imdbID,
-                          action: "nominate",
-                        });
-                        refetchBallot();
+                        if (nominated.length < 5) {
+                          await nominateMovie({
+                            imdbID: movie.imdbID,
+                            action: "nominate",
+                          });
+                          refetchBallot();
+                        } else {
+                          enqueueSnackbar(
+                            "You've already nominated 5 movies.",
+                            { variant: "error" }
+                          );
+                        }
                       }}
                     >
                       Nominate
