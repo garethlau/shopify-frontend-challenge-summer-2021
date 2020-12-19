@@ -67,7 +67,7 @@ export default function Nominate() {
   );
   const search = useTextField("");
   const debouncedSearch = useDebounce(search.value, 500);
-  const { data: movies } = useMovies(debouncedSearch);
+  const { data: movies, status: moviesStatus } = useMovies(debouncedSearch);
   const { mutateAsync: nominateMovie } = useNominateMovie(ballotId);
   const [nominated, setNominated] = useState([]);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -157,6 +157,9 @@ export default function Nominate() {
         />
         <div>
           {debouncedSearch && movies?.length === 0 && <p>No results.</p>}
+          {moviesStatus !== "idle" && moviesStatus === "loading" && (
+            <p>Loading</p>
+          )}
           <AnimatePresence>
             {movies?.map((movie, index) => {
               return (
