@@ -33,6 +33,9 @@ const useStyles = makeStyles((theme) => ({
     margin: "auto",
     textAlign: "center",
     color: "white",
+    [theme.breakpoints.down("sm")]: {
+      width: "90vw",
+    },
   },
   link: {
     "&:hover": {
