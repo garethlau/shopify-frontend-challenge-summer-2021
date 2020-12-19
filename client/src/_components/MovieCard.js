@@ -7,8 +7,45 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "rgb(43, 43, 50)",
     borderRadius: "10px",
     display: "grid",
-    gridTemplateColumns: "100px auto 150px",
     margin: "20px 0",
+    gridTemplateColumns: "100px auto 150px",
+    gridTemplateRows: "auto",
+    gridTemplateAreas: "'poster info action'",
+    [theme.breakpoints.down("sm")]: {
+      gridTemplateColumns: "100px auto",
+      gridTemplateRows: "auto 55px",
+      gridTemplateAreas: "'poster info' 'poster action'",
+    },
+  },
+  poster: {
+    gridArea: "poster",
+    padding: "10px",
+  },
+  info: {
+    gridArea: "info",
+    color: "white",
+    display: "table",
+    height: "100%",
+    padding: "20px",
+    textAlign: "left",
+    "& > div": {
+      display: "table-cell",
+      verticalAlign: "middle",
+    },
+    [theme.breakpoints.down("sm")]: {
+      padding: "5px 20px",
+      height: "40px",
+    },
+  },
+  action: {
+    gridArea: "action",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    [theme.breakpoints.down("sm")]: {
+      justifyContent: "left",
+      paddingLeft: "20px",
+    },
   },
 }));
 
@@ -39,36 +76,20 @@ export default function MovieCard({ poster, title, year, action }) {
       }}
       animate={inView ? "visible" : "hidden"}
     >
-      <div style={{ padding: "10px" }}>
+      <div className={classes.poster}>
         <img
           style={{ width: "100%", borderRadius: "5px" }}
           src={poster}
           alt=""
         />
       </div>
-      <div
-        style={{
-          color: "white",
-          display: "table",
-          height: "100%",
-          padding: "20px",
-          textAlign: "left",
-        }}
-      >
-        <div style={{ display: "table-cell", verticalAlign: "middle" }}>
+      <div className={classes.info}>
+        <div>
           <h4 style={{ margin: 0 }}>{title}</h4>
           <p style={{ margin: 0 }}>Released: {year}</p>
         </div>
       </div>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        {action}
-      </div>
+      <div className={classes.action}>{action}</div>
     </motion.div>
   );
 }
