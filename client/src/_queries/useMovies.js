@@ -1,29 +1,31 @@
-import { useQuery } from "react-query";
+import { useInfiniteQuery } from "react-query";
 import axios from "axios";
 
 export default function useMovies(title) {
-  return useQuery(
+  return useInfiniteQuery(
     ["movies", { active: title }],
-    () =>
-      new Promise(
-        (resolve, reject) => {
-          if (title?.trim().length === 0) {
-            resolve([]);
-          } else {
-            axios
-              .get("/api/movie?title=" + title)
-              .then((response) => {
-                const movies = response.data?.movies;
-                resolve(movies);
-              })
-              .catch((error) => {
-                reject(error);
-              });
-          }
-        },
-        {
-          retry: false,
+    ({ pageParam = 1 }) =>
+      new Promise((resolve, reject) => {
+        if (title?.trim().length === 0) {
+          resolve([]);
+        } else {
+          axios
+            .get("/api/movie?title=" + title + "&page=" + pageParam)
+            .then((response) => {
+              const { data } = response;
+              resolve(data);
+            })
+            .catch((error) => {
+              reject(error);
+            });
         }
-      )
+      }),
+    {
+      retry: false,
+      refetchOnWindowFocus: false,
+      getNextPageParam: (lastPage) => {
+        return lastPage.nextPage;
+      },
+    }
   );
 }

@@ -1,8 +1,8 @@
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { useParams } from "react-router-dom";
 import useBallot from "../_queries/useBallot";
 import axios from "axios";
-import { useEffect, useState } from "react";
 import useMovies from "../_queries/useMovies";
 import useTextField from "../_hooks/useTextField";
 import useDebounce from "../_hooks/useDebounce";
@@ -11,6 +11,7 @@ import useNominateMovie from "../_mutations/useNominateMovie";
 import MovieCard from "../_components/MovieCard";
 import { AnimatePresence } from "framer-motion";
 import { useSnackbar } from "notistack";
+import { motion } from "framer-motion";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -67,7 +68,13 @@ export default function Nominate() {
   );
   const search = useTextField("");
   const debouncedSearch = useDebounce(search.value, 500);
-  const { data: movies, status: moviesStatus } = useMovies(debouncedSearch);
+  const {
+    data: movies,
+    status: moviesStatus,
+    fetchNextPage,
+    isFetchingNextPage,
+    hasNextPage,
+  } = useMovies(debouncedSearch);
   const { mutateAsync: nominateMovie } = useNominateMovie(ballotId);
   const [nominated, setNominated] = useState([]);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
@@ -161,41 +168,63 @@ export default function Nominate() {
             <p>Loading</p>
           )}
           <AnimatePresence>
-            {movies?.map((movie, index) => {
-              return (
-                <MovieCard
-                  key={index}
-                  title={movie.Title}
-                  year={movie.Year}
-                  poster={movie.Poster}
-                  action={
-                    <Button
-                      disabled={nominated
-                        .map((x) => x.imdbID)
-                        .includes(movie.imdbID)}
-                      variant="contained"
-                      color="primary"
-                      onClick={async () => {
-                        if (nominated.length < 5) {
-                          await nominateMovie({
-                            imdbID: movie.imdbID,
-                            action: "nominate",
-                          });
-                          refetchBallot();
-                        } else {
-                          enqueueSnackbar(
-                            "You've already nominated 5 movies.",
-                            { variant: "error" }
-                          );
-                        }
-                      }}
-                    >
-                      Nominate
-                    </Button>
-                  }
-                />
-              );
-            })}
+            {movies?.pages?.map((page, pageNumber) => (
+              <React.Fragment key={pageNumber}>
+                {page.movies?.map((movie, index) => (
+                  <MovieCard
+                    key={index}
+                    title={movie.Title}
+                    year={movie.Year}
+                    poster={movie.Poster}
+                    action={
+                      <Button
+                        disabled={nominated
+                          .map((x) => x.imdbID)
+                          .includes(movie.imdbID)}
+                        variant="contained"
+                        color="primary"
+                        onClick={async () => {
+                          if (nominated.length < 5) {
+                            await nominateMovie({
+                              imdbID: movie.imdbID,
+                              action: "nominate",
+                            });
+                            refetchBallot();
+                          } else {
+                            enqueueSnackbar(
+                              "You've already nominated 5 movies.",
+                              { variant: "error" }
+                            );
+                          }
+                        }}
+                      >
+                        Nominate
+                      </Button>
+                    }
+                  />
+                ))}
+              </React.Fragment>
+            ))}
+          </AnimatePresence>
+          <AnimatePresence>
+            {hasNextPage && !isFetchingNextPage && (
+              <motion.div
+                initial={{ opacity: 0, y: 100, scale: 0.5 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 100, scale: 0.5 }}
+                transition={{ delay: 0 }}
+              >
+                <Button
+                  fullWidth
+                  variant="contained"
+                  color="secondary"
+                  onClick={fetchNextPage}
+                  disabled={!hasNextPage || isFetchingNextPage}
+                >
+                  Load More
+                </Button>
+              </motion.div>
+            )}
           </AnimatePresence>
         </div>
       </div>

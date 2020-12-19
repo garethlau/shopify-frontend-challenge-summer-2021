@@ -5,13 +5,14 @@ const axios = require("axios");
 const querystring = require("querystring");
 
 router.get("/", async (req, res) => {
-  const { title = "" } = req.query;
+  const { title = "", page = 0 } = req.query;
   if (!title || title === "") {
     return res.status(422).send();
   }
   try {
     const params = querystring.stringify({
       s: title,
+      page,
     });
     const uri = "http://www.omdbapi.com/?&apikey=4ad65c88&" + params;
     const response = await axios.get(uri);
@@ -20,7 +21,11 @@ router.get("/", async (req, res) => {
     if (!movies) {
       return res.status(200).send({ movies: [] });
     }
-    return res.status(200).send({ movies });
+    if (movies.length < 10) {
+      return res.status(200).send({ movies });
+    }
+    let nextPage = parseInt(page) + 1;
+    return res.status(200).send({ movies, nextPage });
   } catch (error) {
     console.log(error);
     return res.status(500).send();
