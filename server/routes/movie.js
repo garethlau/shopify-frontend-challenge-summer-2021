@@ -14,7 +14,7 @@ router.get("/", async (req, res) => {
       s: title,
       page,
     });
-    const uri = "http://www.omdbapi.com/?&apikey=4ad65c88&" + params;
+    const uri = `http://www.omdbapi.com/?&apikey=${keys.OMDB_API_KEY}&${params}`;
     const response = await axios.get(uri);
     const { data } = response;
     const movies = data.Search;
@@ -35,7 +35,7 @@ router.get("/", async (req, res) => {
 router.get("/:imdbID", async (req, res) => {
   const { imdbID } = req.params;
   try {
-    const uri = "http://www.omdbapi.com/?&apikey=4ad65c88&i=" + imdbID;
+    const uri = `http://www.omdbapi.com/?&apikey=${keys.OMDB_API_KEY}&i=${imdbID}`;
     const response = await axios.get(uri);
     const { data } = response;
     return res.status(200).send({ movie: data });
