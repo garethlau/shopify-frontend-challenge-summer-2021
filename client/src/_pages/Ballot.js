@@ -47,23 +47,6 @@ const useStyles = makeStyles((theme) => ({
       transition: "ease 0.3s",
     },
   },
-  ballot: {
-    // backgroundColor: theme.colors.lightShade,
-  },
-  // unused
-  nomineeList: {
-    backgroundColor: theme.colors.lightShade,
-    padding: "20px",
-  },
-  // Unused
-  movieCard: {
-    backgroundColor: theme.colors.card,
-    transition: "background-color 0.3s",
-    borderRadius: "10px",
-    display: "grid",
-    gridTemplateColumns: "100px auto 150px",
-    margin: "20px 0",
-  },
   search: {
     width: "100%",
     padding: "10px",
@@ -148,7 +131,7 @@ export default function Nominate() {
             {isLoading ? (
               "Loading"
             ) : (
-              <div className={classes.ballot}>
+              <div>
                 <h1>Nominations</h1>
                 {nominated.length === 5 ? (
                   <div className={classes.completeBanner}>
