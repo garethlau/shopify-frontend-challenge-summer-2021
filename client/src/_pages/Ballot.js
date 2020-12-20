@@ -166,20 +166,20 @@ export default function Nominate() {
 
           <div>
             <h1>Nominations</h1>
-            <React.Fragment>
-              {nominated &&
-                (nominated.length === 5 ? (
-                  <div className={classes.completeBanner}>
-                    <p>Congratulations, you've nominated 5 movies!</p>
-                  </div>
-                ) : (
-                  <p>
-                    You've nominated {nominated.length} movie
-                    {nominated.length !== 1 && "s"}, {5 - nominated.length} more
-                    to go!
-                  </p>
-                ))}
+            {nominated &&
+              (nominated.length === 5 ? (
+                <div className={classes.completeBanner}>
+                  <p>Congratulations, you've nominated 5 movies!</p>
+                </div>
+              ) : (
+                <p>
+                  You've nominated {nominated.length} movie
+                  {nominated.length !== 1 && "s"}, {5 - nominated.length} more
+                  to go!
+                </p>
+              ))}
 
+            <AnimatePresence>
               {nominated?.map((movie, index) => {
                 return (
                   <MovieCard
@@ -199,7 +199,7 @@ export default function Nominate() {
                   />
                 );
               })}
-            </React.Fragment>
+            </AnimatePresence>
           </div>
 
           <h1>Search</h1>

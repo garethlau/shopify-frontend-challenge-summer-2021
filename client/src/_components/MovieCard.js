@@ -75,7 +75,7 @@ export default function MovieCard({ poster, title, year, action }) {
       exit={{
         opacity: 0,
         y: 100,
-        scale: 0.7,
+        scale: 0,
       }}
       animate={inView ? "visible" : "hidden"}
     >
