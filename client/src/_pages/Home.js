@@ -5,6 +5,7 @@ import { useHistory } from "react-router-dom";
 import { useSnackbar } from "notistack";
 import { motion } from "framer-motion";
 import DarkModeSwitch from "../_components/DarkModeSwitch";
+import Footer from "../_components/Footer";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -72,6 +73,7 @@ export default function Home() {
           </Button>
         </motion.div>
       </div>
+      <Footer />
     </div>
   );
 }
