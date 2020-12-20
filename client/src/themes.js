@@ -16,7 +16,7 @@ const courgette = {
     "U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF",
 };
 
-const theme = createMuiTheme({
+const base = {
   palette: {
     primary: {
       main: "#F2A826",
@@ -34,12 +34,6 @@ const theme = createMuiTheme({
       white: "#F8F7F7",
     },
   },
-  colors: {
-    darkAccent: "#C94B44",
-    darkShade: "#413F51",
-    lightShade: "#F2F6F1",
-    lightAccent: "#90B4B3",
-  },
   typography: {
     fontFamily: "Courgette, Arial",
     fontSize: 18,
@@ -51,6 +45,30 @@ const theme = createMuiTheme({
       },
     },
   },
+};
+
+export const darkTheme = createMuiTheme({
+  type: "dark",
+  ...base,
+  colors: {
+    darkAccent: "#C94B44",
+    darkShade: "#413F51",
+    lightShade: "#F2F6F1",
+    lightAccent: "#90B4B3",
+    backgroundColor: "#413F51",
+    font: "#FFFFFF",
+  },
 });
 
-export default theme;
+export const lightTheme = createMuiTheme({
+  type: "light",
+  ...base,
+  colors: {
+    darkAccent: "#ff0005",
+    darkShade: "#ff0005",
+    lightShade: "#F2F6F1",
+    lightAccent: "#90B4B3",
+    backgroundColor: "#f2eee2",
+    font: "#000000",
+  },
+});

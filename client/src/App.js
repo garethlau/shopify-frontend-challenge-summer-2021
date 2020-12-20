@@ -2,27 +2,27 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ThemeProvider } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import theme from "./theme";
+import { darkTheme, lightTheme } from "./themes";
 
 import Home from "./_pages/Home";
 import Ballot from "./_pages/Ballot";
 import Font from "./_pages/Font";
 import { SnackbarProvider } from "notistack";
+import { DarkModeProvider } from "./_contexts/darkMode";
 
 const queryClient = new QueryClient();
 
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <SnackbarProvider
-        maxSnack={1}
-        anchorOrigin={{
-          vertical: "top",
-          horizontal: "center",
-        }}
-      >
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
+      <DarkModeProvider>
+        <SnackbarProvider
+          maxSnack={1}
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "center",
+          }}
+        >
           <Router>
             <Switch>
               <Route path="/" exact component={Home} />
@@ -30,8 +30,8 @@ function App() {
               <Route path="/font" component={Font} />
             </Switch>
           </Router>
-        </ThemeProvider>
-      </SnackbarProvider>
+        </SnackbarProvider>
+      </DarkModeProvider>
     </QueryClientProvider>
   );
 }
