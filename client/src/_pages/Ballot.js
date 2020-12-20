@@ -17,6 +17,8 @@ import LinkIcon from "@material-ui/icons/Link";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import DarkModeSwitch from "../_components/DarkModeSwitch";
 import useNominatedMovies from "../_queries/useNominatedMovies";
+import checkExists from "../_utils/checkExists";
+import DoesNotExist from "../_components/DoesNotExist";
 
 const ORIGIN = process.env.REACT_APP_ORIGIN || "localhost:3000";
 const useStyles = makeStyles((theme) => ({
@@ -64,6 +66,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const Status = {
+  EXISTS: "EXISTS",
+  DOES_NOT_EXIST: "DOES_NOT_EXIST",
+  LOADING: "LOADING",
+};
 export default function Nominate() {
   const { ballotId } = useParams();
   const classes = useStyles();
@@ -82,6 +89,17 @@ export default function Nominate() {
   } = useMovies(debouncedSearch);
   const { mutateAsync: nominateMovie } = useNominateMovie(ballotId);
   const { data: nominated } = useNominatedMovies(ballotId);
+  const [status, setStatus] = useState(Status.LOADING);
+
+  useEffect(async () => {
+    if (ballotId) {
+      if (await checkExists(ballotId)) {
+        setStatus(Status.EXISTS);
+      } else {
+        setStatus(Status.DOES_NOT_EXIST);
+      }
+    }
+  }, [ballotId]);
 
   async function nominate(movie) {
     if (nominated?.length >= 5) {
@@ -119,8 +137,10 @@ export default function Nominate() {
     }
   }
 
-  if (isLoading) {
-    return "Loading";
+  if (status === Status.LOADING || isLoading) {
+    return <div className={classes.root}></div>;
+  } else if (status === Status.DOES_NOT_EXIST) {
+    return <DoesNotExist />;
   }
   return (
     <div style={{ overflowX: "hidden" }}>
