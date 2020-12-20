@@ -16,6 +16,7 @@ import QRCode from "../_components/QRCode";
 import LinkIcon from "@material-ui/icons/Link";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import DarkModeSwitch from "../_components/DarkModeSwitch";
+import useNominatedMovies from "../_queries/useNominatedMovies";
 
 const ORIGIN = process.env.REACT_APP_ORIGIN || "localhost:3000";
 const useStyles = makeStyles((theme) => ({
@@ -69,6 +70,7 @@ export default function Nominate() {
   const { data: ballot, isLoading, refetch: refetchBallot } = useBallot(
     ballotId
   );
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const search = useTextField("");
   const debouncedSearch = useDebounce(search.value, 500);
   const {
@@ -79,32 +81,47 @@ export default function Nominate() {
     hasNextPage,
   } = useMovies(debouncedSearch);
   const { mutateAsync: nominateMovie } = useNominateMovie(ballotId);
-  const [nominated, setNominated] = useState([]);
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar();
+  const { data: nominated } = useNominatedMovies(ballotId);
 
-  useEffect(() => {
-    if (ballot?.nominations?.length === 0) {
-      setNominated([]);
-    } else if (ballot?.nominations?.length > 0) {
-      let promises = ballot.nominations.map(
-        (imdbID) =>
-          new Promise((resolve, reject) => {
-            axios
-              .get("/api/movie/" + imdbID)
-              .then((response) => {
-                resolve(response.data.movie);
-              })
-              .catch((error) => {
-                reject(error);
-              });
-          })
-      );
-      Promise.all(promises).then((values) => {
-        setNominated(values);
+  async function nominate(movie) {
+    if (nominated?.length >= 5) {
+      enqueueSnackbar("You've already nominated 5 movies.", {
+        variant: "warning",
       });
+      return;
     }
-  }, [ballot]);
+    try {
+      await nominateMovie({
+        movie: movie,
+        action: "nominate",
+      });
+    } catch (error) {
+      enqueueSnackbar(
+        "We ran into an error on our end. Please try again later or contact support.",
+        {
+          variant: "error",
+        }
+      );
+    } finally {
+      refetchBallot();
+    }
+  }
 
+  async function withdraw(movie) {
+    try {
+      await nominateMovie({
+        movie,
+        action: "withdraw",
+      });
+    } catch (error) {
+    } finally {
+      refetchBallot();
+    }
+  }
+
+  if (isLoading) {
+    return "Loading";
+  }
   return (
     <div style={{ overflowX: "hidden" }}>
       <div className={classes.root}>
@@ -128,12 +145,10 @@ export default function Nominate() {
           <QRCode />
 
           <div>
-            {isLoading ? (
-              "Loading"
-            ) : (
-              <div>
-                <h1>Nominations</h1>
-                {nominated.length === 5 ? (
+            <h1>Nominations</h1>
+            <React.Fragment>
+              {nominated &&
+                (nominated.length === 5 ? (
                   <div className={classes.completeBanner}>
                     <p>Congratulations, you've nominated 5 movies!</p>
                   </div>
@@ -143,34 +158,28 @@ export default function Nominate() {
                     {nominated.length !== 1 && "s"}, {5 - nominated.length} more
                     to go!
                   </p>
-                )}
-                {nominated.map((movie, index) => {
-                  return (
-                    <MovieCard
-                      key={index}
-                      title={movie.Title}
-                      poster={movie.Poster}
-                      year={movie.Year}
-                      action={
-                        <Button
-                          onClick={async () => {
-                            await nominateMovie({
-                              imdbID: movie.imdbID,
-                              action: "withdraw",
-                            });
-                            refetchBallot();
-                          }}
-                          variant="contained"
-                          color="secondary"
-                        >
-                          Remove
-                        </Button>
-                      }
-                    />
-                  );
-                })}
-              </div>
-            )}
+                ))}
+
+              {nominated?.map((movie, index) => {
+                return (
+                  <MovieCard
+                    key={index}
+                    title={movie.Title}
+                    poster={movie.Poster}
+                    year={movie.Year}
+                    action={
+                      <Button
+                        onClick={() => withdraw(movie)}
+                        variant="contained"
+                        color="secondary"
+                      >
+                        Remove
+                      </Button>
+                    }
+                  />
+                );
+              })}
+            </React.Fragment>
           </div>
 
           <h1>Search</h1>
@@ -196,25 +205,12 @@ export default function Nominate() {
                       poster={movie.Poster}
                       action={
                         <Button
-                          disabled={nominated
-                            .map((x) => x.imdbID)
-                            .includes(movie.imdbID)}
+                          // disabled={nominated
+                          //   .map((x) => x.imdbID)
+                          //   .includes(movie.imdbID)}
                           variant="contained"
                           color="primary"
-                          onClick={async () => {
-                            if (nominated.length < 5) {
-                              await nominateMovie({
-                                imdbID: movie.imdbID,
-                                action: "nominate",
-                              });
-                              refetchBallot();
-                            } else {
-                              enqueueSnackbar(
-                                "You've already nominated 5 movies.",
-                                { variant: "error" }
-                              );
-                            }
-                          }}
+                          onClick={() => nominate(movie)}
                         >
                           Nominate
                         </Button>
