@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Home() {
   const classes = useStyles();
-  const { mutateAsync: createBallot } = useCreateBallot();
+  const { mutateAsync: createBallot, isLoading } = useCreateBallot();
   const history = useHistory();
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
 
@@ -68,7 +68,12 @@ export default function Home() {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ delay: 0.5 }}
         >
-          <Button color="primary" variant="contained" onClick={onClick}>
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={onClick}
+            isLoading={isLoading}
+          >
             Get Started
           </Button>
         </motion.div>
