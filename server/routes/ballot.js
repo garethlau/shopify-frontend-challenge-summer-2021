@@ -2,7 +2,9 @@ const express = require("express");
 const router = express.Router();
 const crypto = require("crypto");
 const mongoose = require("mongoose");
+const axios = require("axios");
 const Ballot = mongoose.model("Ballot");
+const keys = require("../config/keys");
 
 /**
  * Create new ballot
@@ -36,11 +38,46 @@ router.get("/:ballotCode", async (req, res) => {
 });
 
 /**
+ * Get nominated movies
+ */
+
+router.get("/:ballotCode/movies", async (req, res) => {
+  const { ballotCode } = req.params;
+  try {
+    const ballot = await Ballot.findOne({ code: ballotCode }).exec();
+    if (!ballot) {
+      return res.status(404).send({ nominations: null });
+    }
+    const { nominations } = ballot;
+    let promises = nominations.map(
+      (imdbID) =>
+        new Promise((resolve, reject) => {
+          const uri = `http://www.omdbapi.com/?&apikey=${keys.OMDB_API_KEY}&i=${imdbID}`;
+          axios
+            .get(uri)
+            .then((response) => {
+              resolve(response.data);
+            })
+            .catch((error) => {
+              reject(error);
+            });
+        })
+    );
+
+    let movies = await Promise.all(promises);
+    return res.status(200).send({ movies });
+  } catch (error) {
+    return res.status(500).send();
+  }
+});
+
+/**
  * Nominate a movie as apart of the ballot
  */
 router.patch("/:ballotCode/nominate", async (req, res) => {
   const { ballotCode } = req.params;
   const { imdbID, action } = req.body;
+  // return res.status(500).send();
   try {
     let ballot = await Ballot.findOne({ code: ballotCode }).exec();
     let prevNominations = ballot.nominations;
