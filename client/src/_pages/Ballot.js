@@ -205,9 +205,9 @@ export default function Nominate() {
                       poster={movie.Poster}
                       action={
                         <Button
-                          // disabled={nominated
-                          //   .map((x) => x.imdbID)
-                          //   .includes(movie.imdbID)}
+                          disabled={nominated
+                            ?.map((x) => x.imdbID)
+                            .includes(movie.imdbID)}
                           variant="contained"
                           color="primary"
                           onClick={() => nominate(movie)}
