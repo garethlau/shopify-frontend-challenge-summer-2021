@@ -2,7 +2,6 @@ import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme) => ({
-  root: {},
   disabled: {
     color: "white",
     opacity: 0.7,
@@ -22,7 +21,6 @@ export default function CustomButton({ children, ...others }) {
       classes={{
         label: classes.label,
         disabled: classes.disabled,
-        root: classes.root,
       }}
       {...others}
     >
