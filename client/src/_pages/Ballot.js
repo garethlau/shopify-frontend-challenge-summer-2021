@@ -15,13 +15,15 @@ import { motion } from "framer-motion";
 import QRCode from "../_components/QRCode";
 import LinkIcon from "@material-ui/icons/Link";
 import { CopyToClipboard } from "react-copy-to-clipboard";
+import DarkModeSwitch from "../_components/DarkModeSwitch";
 
 const ORIGIN = process.env.REACT_APP_ORIGIN || "localhost:3000";
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100vw",
     minHeight: "100vh",
-    backgroundColor: theme.colors.darkShade,
+    backgroundColor: theme.colors.backgroundColor,
+    transition: "background-color 0.3s",
     paddingTop: "100px",
     paddingBottom: "200px",
     "& h1": {
@@ -32,7 +34,8 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: "640px",
     margin: "auto",
     textAlign: "center",
-    color: "white",
+    color: theme.colors.font,
+    transition: "color 0.3s",
     [theme.breakpoints.down("sm")]: {
       width: "90vw",
     },
@@ -47,12 +50,15 @@ const useStyles = makeStyles((theme) => ({
   ballot: {
     // backgroundColor: theme.colors.lightShade,
   },
+  // unused
   nomineeList: {
     backgroundColor: theme.colors.lightShade,
     padding: "20px",
   },
+  // Unused
   movieCard: {
-    backgroundColor: "rgb(43, 43, 50)",
+    backgroundColor: theme.colors.card,
+    transition: "background-color 0.3s",
     borderRadius: "10px",
     display: "grid",
     gridTemplateColumns: "100px auto 150px",
@@ -119,6 +125,7 @@ export default function Nominate() {
   return (
     <div style={{ overflowX: "hidden" }}>
       <div className={classes.root}>
+        <DarkModeSwitch />
         <div className={classes.container}>
           <h1>
             <CopyToClipboard

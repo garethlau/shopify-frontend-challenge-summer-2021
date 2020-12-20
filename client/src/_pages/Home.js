@@ -4,12 +4,14 @@ import Button from "../_components/Button";
 import { useHistory } from "react-router-dom";
 import { useSnackbar } from "notistack";
 import { motion } from "framer-motion";
+import DarkModeSwitch from "../_components/DarkModeSwitch";
 
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100vw",
     height: "100vh",
-    backgroundColor: theme.colors.darkShade,
+    backgroundColor: theme.colors.backgroundColor,
+    transition: "background-color 0.3s",
   },
   content: {
     [theme.breakpoints.up("sm")]: {
@@ -22,7 +24,8 @@ const useStyles = makeStyles((theme) => ({
       padding: 0,
     },
     paddingTop: "150px",
-    color: "white",
+    color: theme.colors.font,
+    transition: "color 0.3s",
     textAlign: "center",
   },
   introText: {
@@ -50,6 +53,7 @@ export default function Home() {
 
   return (
     <div className={classes.root}>
+      <DarkModeSwitch />
       <div className={classes.content}>
         <motion.div
           initial={{ opacity: 0, y: 100, scale: 0.5 }}

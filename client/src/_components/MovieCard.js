@@ -4,10 +4,12 @@ import { useInView } from "react-intersection-observer";
 
 const useStyles = makeStyles((theme) => ({
   movieCard: {
-    backgroundColor: "rgb(43, 43, 50)",
+    backgroundColor: theme.type === "dark" ? "rgb(43, 43, 50)" : "#ffffff",
+    transition: "background-color 0.3s",
     borderRadius: "10px",
     display: "grid",
     margin: "20px 0",
+    boxShadow: theme.shadows[5],
     gridTemplateColumns: "100px auto 150px",
     gridTemplateRows: "auto",
     gridTemplateAreas: "'poster info action'",
@@ -23,7 +25,8 @@ const useStyles = makeStyles((theme) => ({
   },
   info: {
     gridArea: "info",
-    color: "white",
+    color: theme.colors.font,
+    transition: "color 0.3s",
     display: "table",
     height: "100%",
     padding: "20px",
