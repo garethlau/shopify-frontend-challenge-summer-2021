@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import useBallot from "../_queries/useBallot";
 import axios from "axios";
 import useMovies from "../_queries/useMovies";
@@ -8,6 +8,7 @@ import useTextField from "../_hooks/useTextField";
 import useDebounce from "../_hooks/useDebounce";
 import Button from "../_components/Button";
 import useNominateMovie from "../_mutations/useNominateMovie";
+import useDeleteBallot from "../_mutations/useDeleteBallot";
 import MovieCard from "../_components/MovieCard";
 import { AnimatePresence } from "framer-motion";
 import { useSnackbar } from "notistack";
@@ -65,6 +66,13 @@ const useStyles = makeStyles((theme) => ({
     padding: "10px",
     borderRadius: "10px",
   },
+  deleteBtn: {
+    margin: "20px",
+    backgroundColor: "#f44336",
+    "&:hover": {
+      backgroundColor: "#cf2f23",
+    },
+  },
 }));
 
 const Status = {
@@ -98,8 +106,10 @@ export default function Nominate() {
   const { data: nominated, refetch: refetchNominated } = useNominatedMovies(
     ballotId
   );
+  const { mutateAsync: deleteBallot } = useDeleteBallot(ballotId);
   const [status, setStatus] = useState(Status.LOADING);
   const [listening, setListening] = useState(false);
+  const history = useHistory();
 
   useEffect(() => {
     if (!listening && ballotId) {
@@ -112,6 +122,11 @@ export default function Nominate() {
           if (data.event === "NOMINATIONS_UPDATED") {
             refetchNominated();
           } else if (data.event === "BALLOT_DELETED") {
+            enqueueSnackbar(
+              "This ballot has been deleted. Redirecting you to the home page.",
+              { variant: "info" }
+            );
+            setTimeout(() => history.push("/"), 3000);
           }
         }
       };
@@ -165,6 +180,19 @@ export default function Nominate() {
     }
   }
 
+  async function onDeleteBallot() {
+    try {
+      await deleteBallot();
+    } catch (error) {
+      enqueueSnackbar(
+        "We ran into an error on our end. Please try again later or contact support.",
+        {
+          variant: "error",
+        }
+      );
+    }
+  }
+
   if (status === Status.LOADING || isLoading) {
     return <div className={classes.root}></div>;
   } else if (status === Status.DOES_NOT_EXIST) {
@@ -191,6 +219,13 @@ export default function Nominate() {
             </CopyToClipboard>
           </Typography>
           <QRCode />
+          <Button
+            onClick={onDeleteBallot}
+            variant="contained"
+            className={classes.deleteBtn}
+          >
+            Delete Ballot
+          </Button>
 
           <div>
             <Typography variant="h1">Nominations</Typography>
