@@ -72,6 +72,12 @@ const Status = {
   DOES_NOT_EXIST: "DOES_NOT_EXIST",
   LOADING: "LOADING",
 };
+
+const EVENT_SOURCE_URL =
+  process.env.NODE_ENV === "production"
+    ? "https://shoppies.garethdev.space"
+    : "http://localhost:5000";
+
 export default function Nominate() {
   const { ballotId } = useParams();
   const classes = useStyles();
@@ -89,8 +95,29 @@ export default function Nominate() {
     hasNextPage,
   } = useMovies(debouncedSearch);
   const { mutateAsync: nominateMovie } = useNominateMovie(ballotId);
-  const { data: nominated } = useNominatedMovies(ballotId);
+  const { data: nominated, refetch: refetchNominated } = useNominatedMovies(
+    ballotId
+  );
   const [status, setStatus] = useState(Status.LOADING);
+  const [listening, setListening] = useState(false);
+
+  useEffect(() => {
+    if (!listening && ballotId) {
+      const events = new EventSource(
+        EVENT_SOURCE_URL + "/api/ballot/" + ballotId + "/subscribe"
+      );
+      events.onmessage = (event) => {
+        const data = JSON.parse(event.data);
+        if (data.event) {
+          if (data.event === "NOMINATIONS_UPDATED") {
+            refetchNominated();
+          } else if (data.event === "BALLOT_DELETED") {
+          }
+        }
+      };
+      setListening(true);
+    }
+  }, [ballotId]);
 
   useEffect(async () => {
     if (ballotId) {
