@@ -109,4 +109,18 @@ router.patch("/:ballotCode/nominate", async (req, res) => {
 
 router.get("/:ballotCode/subscribe", subscribe);
 
+/**
+ * Delete a ballot
+ */
+router.delete("/:ballotCode", async (req, res) => {
+  const { ballotCode } = req.params;
+  try {
+    await Ballot.findOneAndDelete({ code: ballotCode });
+    notifyClients(ballotCode, EventTypes.BALLOT_DELETED);
+    return res.status(200).send();
+  } catch (error) {
+    return res.status(500).send();
+  }
+});
+
 module.exports = router;
