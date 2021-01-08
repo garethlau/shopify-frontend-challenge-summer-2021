@@ -5,6 +5,11 @@ const mongoose = require("mongoose");
 const axios = require("axios");
 const Ballot = mongoose.model("Ballot");
 const keys = require("../config/keys");
+const {
+  subscribe,
+  notifyClients,
+  EventTypes,
+} = require("../services/subscription");
 
 /**
  * Create new ballot
@@ -91,10 +96,17 @@ router.patch("/:ballotCode/nominate", async (req, res) => {
     }
 
     let updatedBallot = await ballot.save();
+    notifyClients(ballotCode, EventTypes.NOMINATIONS_UPDATED);
     return res.status(200).send({ ballot: updatedBallot });
   } catch (error) {
     return res.status(500).send();
   }
 });
+
+/**
+ * Subscribe to events
+ */
+
+router.get("/:ballotCode/subscribe", subscribe);
 
 module.exports = router;
