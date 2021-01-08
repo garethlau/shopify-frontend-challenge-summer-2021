@@ -19,6 +19,7 @@ import DarkModeSwitch from "../_components/DarkModeSwitch";
 import useNominatedMovies from "../_queries/useNominatedMovies";
 import checkExists from "../_utils/checkExists";
 import DoesNotExist from "../_components/DoesNotExist";
+import Typography from "@material-ui/core/Typography";
 
 const ORIGIN = process.env.REACT_APP_ORIGIN || "localhost:3000";
 const useStyles = makeStyles((theme) => ({
@@ -147,7 +148,7 @@ export default function Nominate() {
       <div className={classes.root}>
         <DarkModeSwitch />
         <div className={classes.container}>
-          <h1>
+          <Typography variant="h1">
             <CopyToClipboard
               text={`${ORIGIN}/ballot/${ballotId}`}
               onCopy={() => {
@@ -161,11 +162,11 @@ export default function Nominate() {
                 Ballot: {ballotId} <LinkIcon />
               </span>
             </CopyToClipboard>
-          </h1>
+          </Typography>
           <QRCode />
 
           <div>
-            <h1>Nominations</h1>
+            <Typography variant="h1">Nominations</Typography>
             {nominated &&
               (nominated.length === 5 ? (
                 <div className={classes.completeBanner}>
@@ -201,8 +202,7 @@ export default function Nominate() {
               })}
             </AnimatePresence>
           </div>
-
-          <h1>Search</h1>
+          <Typography variant="h1">Search</Typography>
           <input
             className={classes.search}
             value={search.value}

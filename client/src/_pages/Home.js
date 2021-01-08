@@ -6,6 +6,7 @@ import { useSnackbar } from "notistack";
 import { motion } from "framer-motion";
 import DarkModeSwitch from "../_components/DarkModeSwitch";
 import Footer from "../_components/Footer";
+import Typography from "@material-ui/core/Typography";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -61,7 +62,9 @@ export default function Home() {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{ delay: 0 }}
         >
-          <h1 className={classes.introText}>Welcome to the Shoppies</h1>
+          <Typography variant="h1" className={classes.introText}>
+            Welcome to the Shoppies
+          </Typography>
         </motion.div>
         <motion.div
           initial={{ opacity: 0, y: 100, scale: 0.5 }}
