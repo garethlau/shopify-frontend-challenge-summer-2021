@@ -4,11 +4,30 @@ const bodyParser = require("body-parser");
 const path = require("path");
 const keys = require("./config/keys");
 const app = express();
+const cors = require("cors");
 
 const PORT = process.env.PORT || 5000;
 const NODE_ENV = process.env.NODE_ENV || "dev";
 
+const whitelist = [
+  "http://localhost:3000",
+  "http://localhost:5000/",
+  "https://shoppies.garethdev.space",
+];
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (whitelist.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error(`Origin '${origin}' not allowed by cors`));
+    }
+  },
+  credentials: true,
+};
+
 require("./mongo");
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(require("./routes"));
 
