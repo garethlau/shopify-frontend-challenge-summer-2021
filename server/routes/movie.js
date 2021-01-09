@@ -4,6 +4,19 @@ const keys = require("../config/keys");
 const axios = require("axios");
 const querystring = require("querystring");
 
+router.get("/:imdbID", async (req, res) => {
+  const { imdbID } = req.params;
+  try {
+    const uri = `http://www.omdbapi.com/?&apikey=${keys.OMDB_API_KEY}&i=${imdbID}`;
+    const response = await axios.get(uri);
+    const { data } = response;
+    return res.status(200).send({ movie: data });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).send();
+  }
+});
+
 router.get("/", async (req, res) => {
   const { title = "", page = 0 } = req.query;
   if (!title || title === "") {
@@ -26,19 +39,6 @@ router.get("/", async (req, res) => {
     }
     let nextPage = parseInt(page) + 1;
     return res.status(200).send({ movies, nextPage });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).send();
-  }
-});
-
-router.get("/:imdbID", async (req, res) => {
-  const { imdbID } = req.params;
-  try {
-    const uri = `http://www.omdbapi.com/?&apikey=${keys.OMDB_API_KEY}&i=${imdbID}`;
-    const response = await axios.get(uri);
-    const { data } = response;
-    return res.status(200).send({ movie: data });
   } catch (error) {
     console.log(error);
     return res.status(500).send();
