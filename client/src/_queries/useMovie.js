@@ -10,7 +10,6 @@ export default function useMovie(imdbID) {
         .get("/api/movie/" + imdbID)
         .then((response) => {
           const movie = response.data?.movie;
-          console.log(movie);
           resolve(movie);
         })
         .catch((error) => {
