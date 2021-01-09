@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { useParams, useHistory } from "react-router-dom";
 import useBallot from "../_queries/useBallot";
@@ -96,7 +96,7 @@ export default function Nominate() {
   const search = useTextField("");
   const debouncedSearch = useDebounce(search.value, 500);
   const {
-    data: movies,
+    data,
     status: moviesStatus,
     fetchNextPage,
     isFetchingNextPage,
@@ -110,6 +110,15 @@ export default function Nominate() {
   const [status, setStatus] = useState(Status.LOADING);
   const [listening, setListening] = useState(false);
   const history = useHistory();
+
+  const movies = useMemo(
+    () =>
+      data?.pages
+        .map((page) => page.movies)
+        .flat()
+        .filter((movie) => !!movie) || [],
+    [data]
+  );
 
   useEffect(() => {
     if (!listening && ballotId) {
@@ -273,35 +282,34 @@ export default function Nominate() {
             placeholder="I'm looking for ..."
           />
           <div>
-            {debouncedSearch && movies?.length === 0 && <p>No results.</p>}
-            {moviesStatus !== "idle" && moviesStatus === "loading" && (
+            {moviesStatus !== "idle" && moviesStatus === "loading" ? (
               <p>Loading</p>
+            ) : !!debouncedSearch && movies.length === 0 ? (
+              <p>No Results</p>
+            ) : (
+              ""
             )}
             <AnimatePresence>
-              {movies?.pages?.map((page, pageNumber) => (
-                <React.Fragment key={pageNumber}>
-                  {page.movies?.map((movie, index) => (
-                    <MovieCard
-                      key={index}
-                      imdbID={movie.imdbID}
-                      title={movie.Title}
-                      year={movie.Year}
-                      poster={movie.Poster}
-                      action={
-                        <Button
-                          disabled={nominated
-                            ?.map((x) => x.imdbID)
-                            .includes(movie.imdbID)}
-                          variant="contained"
-                          color="primary"
-                          onClick={() => nominate(movie)}
-                        >
-                          Nominate
-                        </Button>
-                      }
-                    />
-                  ))}
-                </React.Fragment>
+              {movies?.map((movie, index) => (
+                <MovieCard
+                  key={index}
+                  imdbID={movie.imdbID}
+                  title={movie.Title}
+                  year={movie.Year}
+                  poster={movie.Poster}
+                  action={
+                    <Button
+                      disabled={nominated
+                        ?.map((x) => x.imdbID)
+                        .includes(movie.imdbID)}
+                      variant="contained"
+                      color="primary"
+                      onClick={() => nominate(movie)}
+                    >
+                      Nominate
+                    </Button>
+                  }
+                />
               ))}
             </AnimatePresence>
             <AnimatePresence>
