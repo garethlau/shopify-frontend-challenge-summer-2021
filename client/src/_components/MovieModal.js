@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
   },
   content: {
-    backgroundColor: theme.palette.background.paper,
+    backgroundColor: theme.colors.backgroundColor,
     border: "none",
     outline: "none",
     boxShadow: theme.shadows[5],
@@ -23,15 +23,18 @@ const useStyles = makeStyles((theme) => ({
     overflowY: "auto",
     borderRadius: "5px",
     "& > h1": {
+      color: theme.colors.font,
       fontSize: "30px",
       margin: 0,
     },
     "& > h2": {
+      color: theme.colors.font,
       fontSize: "20px",
       fontFamily: "Courgette",
       margin: "15px 0 5px",
     },
     "& > p": {
+      color: theme.colors.font,
       margin: 0,
       fontFamily: "Open Sans",
       fontSize: "16px",
