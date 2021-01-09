@@ -11,7 +11,7 @@ export const DarkModeProvider = ({ children }) => {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
 
   useEffect(() => {
-    let savedDarkModePreference = localStorage.getItem("prefers-dark-mode");
+    let savedDarkModePreference = localStorage.getItem("prefers-light-mode");
     if (savedDarkModePreference === null) {
       if (prefersDarkMode) {
         setIsDarkMode(true);
@@ -21,17 +21,8 @@ export const DarkModeProvider = ({ children }) => {
     }
   }, []);
 
-  useEffect(() => {
-    function persistDarkMode() {
-      localStorage.setItem("prefers-dark-mode", isDarkMode);
-    }
-    window.addEventListener("beforeunload", persistDarkMode);
-    return () => {
-      window.removeEventListener("beforeunload", persistDarkMode);
-    };
-  }, []);
-
   function toggle() {
+    localStorage.setItem("prefers-light-mode", isDarkMode);
     setIsDarkMode(!isDarkMode);
   }
 
