@@ -246,6 +246,7 @@ export default function Nominate() {
               {nominated?.map((movie, index) => {
                 return (
                   <MovieCard
+                    imdbID={movie.imdbID}
                     key={index}
                     title={movie.Title}
                     poster={movie.Poster}
@@ -282,6 +283,7 @@ export default function Nominate() {
                   {page.movies?.map((movie, index) => (
                     <MovieCard
                       key={index}
+                      imdbID={movie.imdbID}
                       title={movie.Title}
                       year={movie.Year}
                       poster={movie.Poster}
