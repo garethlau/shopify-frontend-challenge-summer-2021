@@ -33,7 +33,6 @@ function subscribe(req, res) {
   ballots[ballotCode].push(newClient);
 
   req.on("close", () => {
-    console.log(`${clientId} Connection closed`);
     ballots[ballotCode] = ballots[ballotCode].filter((c) => c.id !== clientId);
     if (ballots[ballotCode].length === 0) {
       let newBallots = Object.assign({}, ballots);
