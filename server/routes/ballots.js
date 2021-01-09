@@ -22,6 +22,7 @@ router.post("/", async (req, res) => {
     const ballot = await new Ballot({ code, nominations: [] }).save();
     return res.status(200).send({ ballot });
   } catch (error) {
+    console.error(error);
     return res.status(500).send();
   }
 });
@@ -38,6 +39,7 @@ router.get("/:ballotCode", async (req, res) => {
     }
     return res.status(200).send({ ballot });
   } catch (error) {
+    console.error(error);
     return res.status(500).send();
   }
 });
@@ -72,6 +74,7 @@ router.get("/:ballotCode/movies", async (req, res) => {
     let movies = await Promise.all(promises);
     return res.status(200).send({ movies });
   } catch (error) {
+    console.error(error);
     return res.status(500).send();
   }
 });
@@ -99,6 +102,7 @@ router.patch("/:ballotCode/nominate", async (req, res) => {
     notifyClients(ballotCode, EventTypes.NOMINATIONS_UPDATED);
     return res.status(200).send({ ballot: updatedBallot });
   } catch (error) {
+    console.error(error);
     return res.status(500).send();
   }
 });
@@ -119,6 +123,7 @@ router.delete("/:ballotCode", async (req, res) => {
     notifyClients(ballotCode, EventTypes.BALLOT_DELETED);
     return res.status(200).send();
   } catch (error) {
+    console.error(error);
     return res.status(500).send();
   }
 });
