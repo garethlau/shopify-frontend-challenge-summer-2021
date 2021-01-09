@@ -7,7 +7,7 @@ export default function useMovie(imdbID) {
   function query() {
     return new Promise((resolve, reject) => {
       axios
-        .get("/api/movie/" + imdbID)
+        .get("/api/movies/" + imdbID)
         .then((response) => {
           const movie = response.data?.movie;
           resolve(movie);

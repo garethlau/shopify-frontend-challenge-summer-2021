@@ -10,7 +10,7 @@ export default function useMovies(title) {
           resolve([]);
         } else {
           axios
-            .get("/api/movie?title=" + title + "&page=" + pageParam)
+            .get("/api/movies?title=" + title + "&page=" + pageParam)
             .then((response) => {
               const { data } = response;
               resolve(data);

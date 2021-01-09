@@ -5,6 +5,6 @@ router.get("/health", (_, res) => {
   return res.status(200).send({ message: "Server is healthy." });
 });
 router.use("/api/ballot", require("./ballot"));
-router.use("/api/movie", require("./movie"));
+router.use("/api/movies", require("./movies"));
 
 module.exports = router;
