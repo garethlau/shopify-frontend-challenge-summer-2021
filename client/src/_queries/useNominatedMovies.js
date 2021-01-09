@@ -5,7 +5,7 @@ export default function useNominatedMovies(ballotId) {
   function query() {
     return new Promise((resolve, reject) => {
       axios
-        .get(`/api/ballot/${ballotId}/movies`)
+        .get(`/api/ballots/${ballotId}/movies`)
         .then((response) => {
           const movies = response.data?.movies;
           resolve(movies);

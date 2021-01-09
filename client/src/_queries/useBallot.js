@@ -7,7 +7,7 @@ export default function useBallot(ballotId = "") {
     () => {
       return new Promise((resolve, reject) => {
         axios
-          .get("/api/ballot/" + ballotId)
+          .get("/api/ballots/" + ballotId)
           .then((response) => {
             const { ballot } = response.data;
             resolve(ballot);

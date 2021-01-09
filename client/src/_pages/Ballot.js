@@ -114,7 +114,7 @@ export default function Nominate() {
   useEffect(() => {
     if (!listening && ballotId) {
       const events = new EventSource(
-        EVENT_SOURCE_URL + "/api/ballot/" + ballotId + "/subscribe"
+        EVENT_SOURCE_URL + "/api/ballots/" + ballotId + "/subscribe"
       );
       events.onmessage = (event) => {
         const data = JSON.parse(event.data);

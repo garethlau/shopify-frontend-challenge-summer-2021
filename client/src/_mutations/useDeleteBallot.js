@@ -7,7 +7,7 @@ export default function useDeleteBallot(ballotCode) {
   function mutate() {
     return new Promise((resolve, reject) => {
       axios
-        .delete("/api/ballot/" + ballotCode)
+        .delete("/api/ballots/" + ballotCode)
         .then(() => {
           resolve();
         })

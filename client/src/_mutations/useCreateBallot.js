@@ -6,7 +6,7 @@ export default function useCreateBallot() {
     () =>
       new Promise((resolve, reject) => {
         axios
-          .post("/api/ballot")
+          .post("/api/ballots")
           .then((response) => {
             const { ballot } = response.data;
             resolve(ballot);

@@ -2,7 +2,7 @@ import axios from "axios";
 
 export default async function checkExists(ballotId) {
   try {
-    const response = await axios.get(`/api/ballot/${ballotId}`);
+    const response = await axios.get(`/api/ballots/${ballotId}`);
     const ballot = response.data?.ballot;
     if (!ballot) {
       return false;

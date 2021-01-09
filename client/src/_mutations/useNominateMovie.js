@@ -10,7 +10,7 @@ export default function useNominateMovie(ballotId) {
     return new Promise((resolve, reject) => {
       const { imdbID } = movie;
       axios
-        .patch(`/api/ballot/${ballotId}/nominate`, {
+        .patch(`/api/ballots/${ballotId}/nominate`, {
           imdbID,
           action,
         })
