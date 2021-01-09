@@ -1,6 +1,8 @@
+import { useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { motion } from "framer-motion";
 import { useInView } from "react-intersection-observer";
+import { MovieModalContext } from "../../_contexts/movieModal";
 
 const useStyles = makeStyles((theme) => ({
   movieCard: {
@@ -39,6 +41,9 @@ const useStyles = makeStyles((theme) => ({
       padding: "5px 20px",
       height: "40px",
     },
+    "&:hover": {
+      cursor: "pointer",
+    },
   },
   action: {
     gridArea: "action",
@@ -52,9 +57,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function MovieCard({ poster, title, year, action }) {
+export default function MovieCard({ poster, title, year, action, imdbID }) {
   const classes = useStyles();
   const [ref, inView] = useInView({ triggerOnce: true });
+  const { open } = useContext(MovieModalContext);
+
   return (
     <motion.div
       className={classes.movieCard}
@@ -86,7 +93,7 @@ export default function MovieCard({ poster, title, year, action }) {
           alt=""
         />
       </div>
-      <div className={classes.info}>
+      <div className={classes.info} onClick={() => open(imdbID)}>
         <div>
           <h4 style={{ margin: 0 }}>{title}</h4>
           <p style={{ margin: 0 }}>Released: {year}</p>
