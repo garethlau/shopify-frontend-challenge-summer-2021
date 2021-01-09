@@ -5,6 +5,7 @@ const path = require("path");
 const keys = require("./config/keys");
 const app = express();
 const cors = require("cors");
+const morgan = require("morgan");
 
 const PORT = process.env.PORT || 5000;
 const NODE_ENV = process.env.NODE_ENV || "dev";
@@ -29,6 +30,7 @@ const corsOptions = {
 require("./mongo");
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
+app.use(morgan("dev"));
 app.use(require("./routes"));
 
 app.listen(PORT, () => {
