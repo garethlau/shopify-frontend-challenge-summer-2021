@@ -1,26 +1,24 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
+import LinkIcon from "@material-ui/icons/Link";
 import { useParams, useHistory } from "react-router-dom";
+import { useSnackbar } from "notistack";
+import { AnimatePresence, motion } from "framer-motion";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 import useBallot from "../_queries/useBallot";
-import axios from "axios";
 import useMovies from "../_queries/useMovies";
 import useTextField from "../_hooks/useTextField";
 import useDebounce from "../_hooks/useDebounce";
 import Button from "../_components/Button";
+import DoesNotExist from "../_components/DoesNotExist";
+import QRCode from "../_components/QRCode";
+import MovieCard from "../_components/MovieCard";
+import DarkModeSwitch from "../_components/DarkModeSwitch";
 import useNominateMovie from "../_mutations/useNominateMovie";
 import useDeleteBallot from "../_mutations/useDeleteBallot";
-import MovieCard from "../_components/MovieCard";
-import { AnimatePresence } from "framer-motion";
-import { useSnackbar } from "notistack";
-import { motion } from "framer-motion";
-import QRCode from "../_components/QRCode";
-import LinkIcon from "@material-ui/icons/Link";
-import { CopyToClipboard } from "react-copy-to-clipboard";
-import DarkModeSwitch from "../_components/DarkModeSwitch";
 import useNominatedMovies from "../_queries/useNominatedMovies";
 import checkExists from "../_utils/checkExists";
-import DoesNotExist from "../_components/DoesNotExist";
-import Typography from "@material-ui/core/Typography";
 
 const ORIGIN = process.env.REACT_APP_ORIGIN || "localhost:3000";
 const useStyles = makeStyles((theme) => ({
@@ -86,12 +84,10 @@ const EVENT_SOURCE_URL =
     ? "https://shoppies.garethdev.space"
     : "http://localhost:5000";
 
-export default function Nominate() {
+export default function Ballot() {
   const { ballotId } = useParams();
   const classes = useStyles();
-  const { data: ballot, isLoading, refetch: refetchBallot } = useBallot(
-    ballotId
-  );
+  const { isLoading, refetch: refetchBallot } = useBallot(ballotId);
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const search = useTextField("");
   const debouncedSearch = useDebounce(search.value, 500);
@@ -141,16 +137,18 @@ export default function Nominate() {
       };
       setListening(true);
     }
-  }, [ballotId]);
+  }, [ballotId, history, enqueueSnackbar, listening, refetchNominated]);
 
-  useEffect(async () => {
-    if (ballotId) {
-      if (await checkExists(ballotId)) {
-        setStatus(Status.EXISTS);
-      } else {
-        setStatus(Status.DOES_NOT_EXIST);
+  useEffect(() => {
+    (async function () {
+      if (ballotId) {
+        if (await checkExists(ballotId)) {
+          setStatus(Status.EXISTS);
+        } else {
+          setStatus(Status.DOES_NOT_EXIST);
+        }
       }
-    }
+    })();
   }, [ballotId]);
 
   async function nominate(movie) {
