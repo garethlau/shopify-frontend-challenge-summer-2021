@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { SnackbarProvider } from "notistack";
 import { DarkModeProvider } from "./_contexts/darkMode";
+import { MovieModalProvider } from "./_contexts/movieModal";
 import Home from "./_pages/Home";
 import Ballot from "./_pages/Ballot";
 import Font from "./_pages/Font";
@@ -12,21 +13,23 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <DarkModeProvider>
-        <SnackbarProvider
-          maxSnack={1}
-          anchorOrigin={{
-            vertical: "top",
-            horizontal: "center",
-          }}
-        >
-          <Router>
-            <Switch>
-              <Route path="/" exact component={Home} />
-              <Route path="/ballot/:ballotId" component={Ballot} />
-              <Route path="/font" component={Font} />
-            </Switch>
-          </Router>
-        </SnackbarProvider>
+        <MovieModalProvider>
+          <SnackbarProvider
+            maxSnack={1}
+            anchorOrigin={{
+              vertical: "top",
+              horizontal: "center",
+            }}
+          >
+            <Router>
+              <Switch>
+                <Route path="/" exact component={Home} />
+                <Route path="/ballot/:ballotId" component={Ballot} />
+                <Route path="/font" component={Font} />
+              </Switch>
+            </Router>
+          </SnackbarProvider>
+        </MovieModalProvider>
       </DarkModeProvider>
     </QueryClientProvider>
   );
