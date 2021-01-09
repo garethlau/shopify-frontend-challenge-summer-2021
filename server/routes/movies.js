@@ -26,6 +26,7 @@ router.get("/", async (req, res) => {
     const params = querystring.stringify({
       s: title,
       page,
+      type: "movie",
     });
     const uri = `http://www.omdbapi.com/?&apikey=${keys.OMDB_API_KEY}&${params}`;
     const response = await axios.get(uri);
