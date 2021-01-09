@@ -3,6 +3,13 @@ import ReactDOM from "react-dom";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
+if (process.env.NODE_ENV === "production") {
+  function noop() {}
+  console.log = noop;
+  console.warn = noop;
+  console.error = noop;
+}
+
 ReactDOM.render(
   <React.StrictMode>
     <App />
