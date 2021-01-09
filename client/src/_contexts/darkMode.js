@@ -11,19 +11,21 @@ export const DarkModeProvider = ({ children }) => {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
 
   useEffect(() => {
-    let savedDarkModePreference = localStorage.getItem("prefers-light-mode");
+    let savedDarkModePreference = localStorage.getItem("prefers-dark-mode");
     if (savedDarkModePreference === null) {
       if (prefersDarkMode) {
         setIsDarkMode(true);
       }
     } else {
-      setIsDarkMode(savedDarkModePreference);
+      setIsDarkMode(JSON.parse(savedDarkModePreference));
     }
   }, []);
 
   function toggle() {
-    localStorage.setItem("prefers-light-mode", isDarkMode);
-    setIsDarkMode(!isDarkMode);
+    setIsDarkMode((prev) => {
+      localStorage.setItem("prefers-dark-mode", JSON.stringify(!prev));
+      return !prev;
+    });
   }
 
   return (
