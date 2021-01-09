@@ -10,6 +10,7 @@ const useStyles = makeStyles((theme) => ({
   text: {
     color: theme.colors.font,
     transition: "color 0.3s",
+    textAlign: "center",
   },
   link: {
     color: theme.palette.primary.main,
@@ -20,10 +21,11 @@ export default function Footer() {
   return (
     <footer className={classes.root}>
       <p className={classes.text}>
-        Made with 🧡 by{" "}
+        Made by{" "}
         <a className={classes.link} href="https://garethlau.me">
-          Gareth Lau
-        </a>
+          Gareth
+        </a>{" "}
+        🧡
       </p>
     </footer>
   );
