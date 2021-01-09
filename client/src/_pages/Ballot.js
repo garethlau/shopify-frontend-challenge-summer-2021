@@ -65,7 +65,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "10px",
   },
   deleteBtn: {
-    margin: "20px",
+    margin: "40px 0 20px",
     backgroundColor: "#f44336",
     "&:hover": {
       backgroundColor: "#cf2f23",
