@@ -70,7 +70,7 @@ export default function DarkModeSwitch(props) {
           track: classes.track,
           checked: classes.checked,
         }}
-        checked={isDarkMode}
+        checked={!!isDarkMode}
         onClick={toggle}
         {...props}
       />
