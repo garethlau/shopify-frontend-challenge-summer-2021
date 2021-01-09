@@ -18,6 +18,7 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: theme.shadows[5],
     padding: "20px",
     width: "90%",
+    maxWidth: "640px",
     height: "70%",
     overflowY: "auto",
     borderRadius: "5px",
