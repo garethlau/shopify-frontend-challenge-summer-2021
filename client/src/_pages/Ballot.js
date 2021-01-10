@@ -4,7 +4,7 @@ import Typography from "@material-ui/core/Typography";
 import LinkIcon from "@material-ui/icons/Link";
 import { useParams, useHistory } from "react-router-dom";
 import { useSnackbar } from "notistack";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, AnimateSharedLayout, motion } from "framer-motion";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import useBallot from "../_queries/useBallot";
 import useMovies from "../_queries/useMovies";
@@ -248,29 +248,30 @@ export default function Ballot() {
                   to go!
                 </p>
               ))}
-
-            <AnimatePresence>
-              {nominated?.map((movie, index) => {
-                return (
-                  <MovieCard
-                    imdbID={movie.imdbID}
-                    key={index}
-                    title={movie.Title}
-                    poster={movie.Poster}
-                    year={movie.Year}
-                    action={
-                      <Button
-                        onClick={() => withdraw(movie)}
-                        variant="contained"
-                        color="secondary"
-                      >
-                        Remove
-                      </Button>
-                    }
-                  />
-                );
-              })}
-            </AnimatePresence>
+            <AnimateSharedLayout>
+              <AnimatePresence>
+                {nominated?.map((movie, index) => {
+                  return (
+                    <MovieCard
+                      imdbID={movie.imdbID}
+                      key={movie.imdbID}
+                      title={movie.Title}
+                      poster={movie.Poster}
+                      year={movie.Year}
+                      action={
+                        <Button
+                          onClick={() => withdraw(movie)}
+                          variant="contained"
+                          color="secondary"
+                        >
+                          Remove
+                        </Button>
+                      }
+                    />
+                  );
+                })}
+              </AnimatePresence>
+            </AnimateSharedLayout>
           </div>
           <Typography variant="h1">Search</Typography>
           <input
