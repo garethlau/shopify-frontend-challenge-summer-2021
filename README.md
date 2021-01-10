@@ -1,8 +1,8 @@
 # Shoppies
 
-Try it out [here](https://shoppies.garethdev.space)!
-
 This is my submission for Shopify's Summer 2021 Front-End Developer Intern Challenge.
+
+Try it out [here](https://shoppies.garethdev.space)!
 
 ## Demo
 
@@ -20,7 +20,7 @@ _Sped up by 2x_.
 
 ![](/demo/movie-details.gif)
 
-### Collaborative Editting and Live Updates
+### Collaborative Editing and Live Updates
 
 _Sped up by 2x_
 
@@ -36,7 +36,7 @@ _Sped up by 2x_
 
 ### Cached Search Results
 
-Search results are automatically cached to improve second visit performance. The demo below was throttled to [Slow 3G (Download 376 kb/s, Latency 2000 ms)](https://stackoverflow.com/questions/48367042/in-chrome-dev-tools-what-is-the-speed-of-each-preset-option-for-network-throttl) in Chrome.
+Search results are cached to improve second time performance. The demo below was throttled to [Slow 3G (Download 376 kb/s, Latency 2000 ms)](https://stackoverflow.com/questions/48367042/in-chrome-dev-tools-what-is-the-speed-of-each-preset-option-for-network-throttl) in Chrome.
 
 ![](/demo/cached-search-results.gif)
 
@@ -45,3 +45,9 @@ Search results are automatically cached to improve second visit performance. The
 Unthrottled (Online) on the left. Throttled (Slow 3G) on the right.
 
 ![](/demo/optimistic-updates.gif)
+
+### Mobile View
+
+Movie posters are not automatically fetched for mobile users.
+
+![](/demo/mobile-view.png)
