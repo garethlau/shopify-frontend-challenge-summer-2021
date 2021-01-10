@@ -15,11 +15,6 @@ const useStyles = makeStyles((theme) => ({
     gridTemplateColumns: "100px auto 150px",
     gridTemplateRows: "auto",
     gridTemplateAreas: "'poster info action'",
-    [theme.breakpoints.down("sm")]: {
-      gridTemplateColumns: "100px auto",
-      gridTemplateRows: "auto 55px",
-      gridTemplateAreas: "'poster info' 'poster action'",
-    },
   },
   poster: {
     gridArea: "poster",
@@ -37,10 +32,6 @@ const useStyles = makeStyles((theme) => ({
       display: "table-cell",
       verticalAlign: "middle",
     },
-    [theme.breakpoints.down("sm")]: {
-      padding: "5px 20px",
-      height: "40px",
-    },
     "&:hover": {
       cursor: "pointer",
     },
@@ -50,10 +41,6 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    [theme.breakpoints.down("sm")]: {
-      justifyContent: "left",
-      paddingLeft: "20px",
-    },
   },
 }));
 
