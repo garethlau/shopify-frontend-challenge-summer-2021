@@ -42,7 +42,7 @@ Search results are cached to improve second time performance. The demo below was
 
 ### Optimistic Updates
 
-Unthrottled (Online) on the left. Throttled (Slow 3G) on the right.
+Nominating a movie and removing a nominated movie are optimistically updated with fallbacks in place if the operation is unsuccessful. Unthrottled (Online) on the left. Throttled (Slow 3G) on the right.
 
 ![](/demo/optimistic-updates.gif)
 
